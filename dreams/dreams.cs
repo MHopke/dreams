@@ -63,12 +63,12 @@ namespace dreams
     #region Color Extensions
     public class Colors
     {
-        public static Color DreamBlue = Color.FromHex("66ccff");
-        public static Color Upset = Color.FromHex("ff5050");
-        public static Color Energized = Color.FromHex("33cc33");
-        public static Color Scared = Color.FromHex("ffcc00");
-        public static Color Sad = Color.FromHex("6666ff");
-        public static Color Confused = Color.FromHex("999966");
+        public static Color DreamBlue = Color.FromHex("95A5A6");
+        public static Color Upset = Color.FromHex("D24D57");
+        public static Color Energized = Color.FromHex("F4D03F");
+        public static Color Scared = Color.FromHex("674172");
+        public static Color Sad = Color.FromHex("34495E");
+        public static Color Confused = Color.FromHex("BFBFBF");
     }
     #endregion
 }

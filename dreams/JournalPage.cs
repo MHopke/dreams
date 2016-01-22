@@ -9,7 +9,7 @@ namespace dreams
 {
     public class JournalPage : ContentPage
     {
-        #region Overridden Methods
+        #region Private Vars
         ObservableCollection<JournalMonth> _months;
         #endregion
 

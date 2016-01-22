@@ -37,6 +37,12 @@ namespace dreams
         #region Methods
         public static void Initialize()
         {
+            Emotions = new List<Emotion>();
+            for (int index = 1; index < DreamRecord.NUM_EMOTIONS; index++)
+            {
+                Emotions.Add((Emotion)index);
+            }
+
             _emotionColors = new Dictionary<Emotion, Color>();
             _emotionColors.Add(Emotion.None, Color.Gray);
             _emotionColors.Add(Emotion.Confused, Colors.Confused);
@@ -127,6 +133,8 @@ namespace dreams
         #endregion
 
         #region Properties
+        public static List<Emotion> Emotions;
+
         public static ParseUser PUser
         {
             get { return ParseUser.CurrentUser; }

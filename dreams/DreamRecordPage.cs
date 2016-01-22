@@ -74,8 +74,8 @@ namespace dreams
                         record.Emotion = (Emotion)picker.SelectedIndex;
                 };
 
-            for (int index = 0; index < DreamRecord.NUM_EMOTIONS; index++)
-                picker.Items.Add(((Emotion)index).ToString());
+            for (int index = 0; index < DreamsAPI.Emotions.Count; index++)
+                picker.Items.Add((DreamsAPI.Emotions[index]).ToString());
 
             picker.SelectedIndex = (int)record.Emotion;
 

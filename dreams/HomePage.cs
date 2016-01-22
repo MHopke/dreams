@@ -146,9 +146,9 @@ namespace dreams
             DateTime date = now;
 
             Emotion emotion = Emotion.None;
-            for (index = 0; index < DreamRecord.NUM_EMOTIONS; index++)
+            for (index = 0; index < DreamsAPI.Emotions.Count; index++)
             {
-                emotion = (Emotion)index;
+                emotion = DreamsAPI.Emotions[index];
                 ObservableCollection<ChartDataPoint> points = new ObservableCollection<ChartDataPoint>();
                 for (sub = 6; sub >= 0; sub--)
                 {
