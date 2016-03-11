@@ -83,9 +83,10 @@ namespace dreams
             chart.Legend = new ChartLegend();
 
             Emotion emotion = Emotion.None;
-            for (int index = 0; index < DreamsAPI.Emotions.Count; index++)
+            List<Emotion> emotions = DreamsAPI.GetEmotions();
+            for (int index = 0; index < emotions.Count; index++)
             {
-                emotion = DreamsAPI.Emotions[index];
+                emotion = emotions[index];
                 List<DreamRecord> records = new List<DreamRecord>(from rec in month.Records
                                                                                  where rec.Emotion == emotion
                                                                                  select rec);

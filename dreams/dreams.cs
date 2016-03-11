@@ -26,26 +26,7 @@ namespace dreams
         #region App Lifecycle Methods
 		protected override void OnStart ()
 		{
-			// Handle when your app starts
-            if (DreamsAPI.PUser != null)
-            {
-                /*User.CurrentUser.SetData(JsonConvert.DeserializeObject<User>((string)
-                    Application.Current.Properties[USER_KEY]));
-
-                if (string.IsNullOrEmpty(User.CurrentUser.AccessToken))
-                {
-                    (MainPage as NavigationPage).Navigation.PushModalAsync(new LoginPage());
-                }
-                else
-                {
-                    //do some database stuff
-                    User.CurrentUser.SynchronizeData();
-                }*/
-            }
-            else
-            {
-                (MainPage as NavigationPage).Navigation.PushModalAsync(new LoginPage());
-            }
+            DreamsAPI.SetupInstallDate();
 		}
 
 		protected override void OnSleep ()

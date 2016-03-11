@@ -21,5 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)JournalMonthCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JournalMonth.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SearchPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DreamsDatabase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SQLite.cs" />
   </ItemGroup>
 </Project>

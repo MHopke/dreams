@@ -20,14 +20,17 @@ namespace dreams
             NavigationPage.SetBackButtonTitle(this, "Journal");
 
             DateTime now = DateTime.UtcNow;
-            DateTime start = DreamsAPI.PUser.CreatedAt.Value;
+            DateTime start = DreamsAPI.InstallDate;
 
             _months = new ObservableCollection<JournalMonth>();
+
+            IEnumerable<DreamRecord> records = DreamsAPI.GetRecords();
             //Console.WriteLine(start);
             while (start <= now)
             {
+                Console.WriteLine($"{start}");
                 JournalMonth jMonth = new JournalMonth() { Date = start };
-                jMonth.Records = new ObservableCollection<DreamRecord>(from rec in DreamsAPI.Records
+                jMonth.Records = new ObservableCollection<DreamRecord>(from rec in records
                      where rec.DateRecorded.Month == start.Month && rec.DateRecorded.Year == start.Year
                      select rec);
                 jMonth.RecordCount = jMonth.Records.Count;
@@ -35,13 +38,6 @@ namespace dreams
 
                 start = start.AddMonths(1);
             }
-
-            JournalMonth curMonth = new JournalMonth() { Date = now };
-            curMonth.Records = new ObservableCollection<DreamRecord>(from rec in DreamsAPI.Records
-                where rec.DateRecorded.Month == now.Month && rec.DateRecorded.Year == now.Year
-                select rec);
-            curMonth.RecordCount = curMonth.Records.Count;
-            _months.Add(curMonth);
 
             ListView list = new ListView()
             {

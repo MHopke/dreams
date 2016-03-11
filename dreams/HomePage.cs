@@ -146,14 +146,15 @@ namespace dreams
             DateTime date = now;
 
             Emotion emotion = Emotion.None;
-            for (index = 0; index < DreamsAPI.Emotions.Count; index++)
+            List<Emotion> emotions = DreamsAPI.GetEmotions();
+            for (index = 0; index < emotions.Count; index++)
             {
-                emotion = DreamsAPI.Emotions[index];
+                emotion = emotions[index];
                 ObservableCollection<ChartDataPoint> points = new ObservableCollection<ChartDataPoint>();
                 for (sub = 6; sub >= 0; sub--)
                 {
                     date = now.AddDays(-sub);
-                    points.Add(new ChartDataPoint(date, new List<DreamRecord>(from rec in DreamsAPI.Records
+                    points.Add(new ChartDataPoint(date, new List<DreamRecord>(from rec in DreamsAPI.GetRecords()
                         where rec.DateRecorded.Date == date.Date && rec.Emotion == emotion
                         select rec).Count));
                 }

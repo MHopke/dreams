@@ -2,8 +2,6 @@
 
 using Xamarin.Forms;
 
-using Parse;
-
 namespace dreams
 {
     public class LoginPage : ContentPage
@@ -287,12 +285,12 @@ namespace dreams
             {
                 try
                 {
-                    await ParseUser.LogInAsync(_email, _password);
+                   // await ParseUser.LogInAsync(_email, _password);
 
                     _indicator.IsRunning = false;
                     _indicatorLayout.IsVisible = false;
 
-                    await DreamsAPI.PullRecords();
+                    //await DreamsAPI.PullRecords();
 
                     MessagingCenter.Send<LoginPage>(this, "DataPulled");
 
@@ -308,7 +306,7 @@ namespace dreams
             }
             else
             {
-                ParseUser user = new ParseUser()
+                /*ParseUser user = new ParseUser()
                     {
                         Username = _email,
                         Email = _email,
@@ -332,7 +330,7 @@ namespace dreams
 
                     _indicatorLayout.IsVisible = false;
                     _indicator.IsRunning = false;
-                }
+                }*/
             }
         }
         #endregion

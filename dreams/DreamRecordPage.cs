@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Xamarin.Forms;
-
-using Parse;
 
 namespace dreams
 {
@@ -74,8 +73,9 @@ namespace dreams
                         record.Emotion = (Emotion)picker.SelectedIndex;
                 };
 
-            for (int index = 0; index < DreamsAPI.Emotions.Count; index++)
-                picker.Items.Add((DreamsAPI.Emotions[index]).ToString());
+            List<Emotion> emotions = DreamsAPI.GetEmotions();
+            for (int index = 0; index < emotions.Count; index++)
+                picker.Items.Add((emotions[index]).ToString());
 
             picker.SelectedIndex = (int)record.Emotion;
 
@@ -98,31 +98,15 @@ namespace dreams
                 {
                     if(newRecord)
                     {
-                        ParseDreamRecord pRecord = new ParseDreamRecord();
-
-                        pRecord.SetData(record);
-                        pRecord.ACL = new Parse.ParseACL(DreamsAPI.PUser);
-
-                        await pRecord.SaveAsync();
-
-                        record.ObjectId = pRecord.ObjectId;
-                        await DreamsAPI.AddRecord(record);
+                        DreamsAPI.SaveRecord(record);
 
                         MessagingCenter.Send<DreamRecordPage, DreamRecord>(this,"NewRecord",record);
                     }
                     else
                     {
-                        ParseDreamRecord pRecord = ParseObject.CreateWithoutData
-                            <ParseDreamRecord>(record.ObjectId);
-
                         try
                         {
-                            await pRecord.FetchAsync();
-                            pRecord.SetData(record);
-
-                            await pRecord.SaveAsync();
-
-                            DreamsAPI.Save();
+                            DreamsAPI.SaveRecord(record);
 
                             if((_previousRecord.DateRecorded != record.DateRecorded 
                                 || _previousRecord.Emotion != record.Emotion) && recordUpdated != null)

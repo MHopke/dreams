@@ -4,11 +4,8 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 
-using Parse;
-
 using Newtonsoft.Json;
 
-using Xamarin;
 using Xamarin.Forms;
 
 namespace dreams
@@ -16,15 +13,12 @@ namespace dreams
     public class DreamsAPI
     {
         #region Constants
-        public const string FIRST_NAME = "firstName";
-        public const string LAST_NAME = "lastName";
-        const string ENTRY_COUNT = "entryCount";
-        const string RECORDS = "records";
         const string UPDATED_AT = "updatedAt";
         #endregion
 
         #region Private Vars
-        static DateTime _updatedDate;
+        static DateTime _installDate;
+        static DreamsDatabase _database;
         static Dictionary<Emotion,Color> _emotionColors;
         #endregion
 
@@ -37,12 +31,6 @@ namespace dreams
         #region Methods
         public static void Initialize()
         {
-            Emotions = new List<Emotion>();
-            for (int index = 1; index < DreamRecord.NUM_EMOTIONS; index++)
-            {
-                Emotions.Add((Emotion)index);
-            }
-
             _emotionColors = new Dictionary<Emotion, Color>();
             _emotionColors.Add(Emotion.None, Color.Gray);
             _emotionColors.Add(Emotion.Confused, Colors.Confused);
@@ -51,64 +39,31 @@ namespace dreams
             _emotionColors.Add(Emotion.Sad, Colors.Sad);
             _emotionColors.Add(Emotion.Scared, Colors.Scared);
 
-            if (App.Current.Properties.ContainsKey(RECORDS))
+            _database = new DreamsDatabase();
+        }
+        public static void SetupInstallDate()
+        {
+            if (App.Current.Properties.ContainsKey(UPDATED_AT))
             {
-                Records = JsonConvert.DeserializeObject<ObservableCollection<DreamRecord>>
-                    ((string)App.Current.Properties[RECORDS]);
+                _installDate = JsonConvert.DeserializeObject<DateTime>
+                    ((string)App.Current.Properties[UPDATED_AT]);
             }
             else
-                Records = new ObservableCollection<DreamRecord>();
+            {
+                _installDate = DateTime.Now;
+                App.Current.Properties.Add(UPDATED_AT, 
+                    JsonConvert.SerializeObject(_installDate));
 
-            if (App.Current.Properties.ContainsKey(UPDATED_AT))
-                _updatedDate = JsonConvert.DeserializeObject<DateTime>(
-                    (string)App.Current.Properties[UPDATED_AT]);
-            else
-                _updatedDate = DateTime.MinValue;
+                App.Current.SavePropertiesAsync();
+            }
         }
-        public static void Save()
+        public static IEnumerable<DreamRecord> GetRecords()
         {
-            if (App.Current.Properties.ContainsKey(RECORDS))
-                App.Current.Properties[RECORDS] = JsonConvert.SerializeObject(Records);
-            else
-                App.Current.Properties.Add(RECORDS, JsonConvert.SerializeObject(Records));
-
-            if (App.Current.Properties.ContainsKey(UPDATED_AT))
-                App.Current.Properties[UPDATED_AT] = JsonConvert.SerializeObject(_updatedDate);
-            else
-                App.Current.Properties.Add(UPDATED_AT, JsonConvert.SerializeObject(_updatedDate));
-
-            App.Current.SavePropertiesAsync();
+            return _database.GetItems();
         }
-
-        public static async Task PullRecords()
+        public static void SaveRecord(DreamRecord record)
         {
-            ParseQuery<ParseDreamRecord> query = 
-                new ParseQuery<ParseDreamRecord>().WhereGreaterThan(UPDATED_AT, _updatedDate);
-
-            query = query.Limit(1000);
-
-            IEnumerable<ParseDreamRecord> records = await query.FindAsync();
-
-            foreach (ParseDreamRecord pRecord in records)
-                Records.Add(new DreamRecord(pRecord));
-
-            Save();
-
-            return;//MessagingCenter.Send<DreamsAPI>(this, "DataPulled");
-        }
-
-        public static Task AddRecord(DreamRecord record)
-        {
-            Records.Add(record);
-
-            if (PUser.ContainsKey(ENTRY_COUNT))
-                PUser[ENTRY_COUNT] = PUser.Get<int>(ENTRY_COUNT) + 1;
-            else
-                PUser.Add(ENTRY_COUNT, 1);
-
-            Save();
-
-            return PUser.SaveAsync();
+            _database.SaveItem(record);
         }
         public static Color GetEmotionColor(Emotion emotion)
         {
@@ -124,29 +79,23 @@ namespace dreams
             string[] tags = tag.Split(',');
             for (int index = 0; index < tags.Length; index++)
             {
-                list.AddRange(new List<DreamRecord>(from rec in Records
+                list.AddRange(new List<DreamRecord>(from rec in GetRecords()
                       where rec.Tags.Contains(tag) && !list.Contains(rec)
                       select rec));
             }
             return list;
         }
+        public static List<Emotion> GetEmotions()
+        {
+            return Enum.GetValues(typeof(Emotion)).Cast<Emotion>().ToList();
+        }
         #endregion
 
         #region Properties
-        public static List<Emotion> Emotions;
-
-        public static ParseUser PUser
+        public static DateTime InstallDate
         {
-            get { return ParseUser.CurrentUser; }
+            get { return _installDate; }
         }
-
-        public int EntryCount
-        {
-            get { return PUser.Get<int>(ENTRY_COUNT); }
-            set { PUser[ENTRY_COUNT] = value; }
-        }
-
-        public static ObservableCollection<DreamRecord> Records;
         #endregion
     }
 }
