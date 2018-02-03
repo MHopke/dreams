@@ -41,8 +41,9 @@ namespace dreams
             };
             Editor description = new Editor()
             {
-                HeightRequest = 300,
+                //HeightRequest = 250,
                 BackgroundColor = Color.Gray,
+                VerticalOptions = LayoutOptions.FillAndExpand
             };
             description.BindingContext = record;
             description.SetBinding(Editor.TextProperty, "Description");
@@ -121,17 +122,32 @@ namespace dreams
                     await Navigation.PopAsync();
                 };
 
+            StackLayout descStack = new StackLayout () {
+                Children =
+                {
+                            descLabel,
+                            description,
+                        },
+                VerticalOptions = LayoutOptions.FillAndExpand
+            };
+            StackLayout bottomStack = new StackLayout () {
+                Children =
+                        {
+                            datePicker,
+                            picker,
+                            tags,
+                            submit
+                        },
+                VerticalOptions = LayoutOptions.End
+            };
+
             StackLayout layout = new StackLayout()
             {
                     Children = 
                         {
                             title,
-                            descLabel,
-                            description,
-                            datePicker,
-                            picker,
-                            tags,
-                            submit
+                    descStack,
+                    bottomStack
                         }
             };
 

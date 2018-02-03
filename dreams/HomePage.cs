@@ -53,9 +53,10 @@ namespace dreams
                     record,
                     journal,
                     search
-                }
+                },
+                VerticalOptions = LayoutOptions.CenterAndExpand
             };
-            
+
             Content = layout;
 
             MessagingCenter.Subscribe<LoginPage>(this, "DataPulled", DataPulled);
